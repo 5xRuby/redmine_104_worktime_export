@@ -1,0 +1,58 @@
+<h2><%= l(:label_104_worktime_report) %></h2>
+
+<%= form_tag(_one_zero_four_worktime_path(@project), method: :get, id: 'query_form') do %>
+  <%= render partial: 'timelog/date_range' %>
+<% end %>
+
+<% if plugin_settings['employee_number_cf_id'].blank? %>
+  <div class="flash warning"><%= l(:label_no_employee_number_cf_configured) %></div>
+<% end %>
+
+<p class="subtitle"><%= l(:text_104_worktime_description) %></p>
+
+<% if @grouped_entries.any? %>
+  <div class="contextual">
+    <%= link_to l(:label_export_104_worktime),
+                _one_zero_four_worktime_export_path(@project, params: request.query_parameters),
+                class: 'icon icon-export' %>
+  </div>
+
+  <table class="list time-entries">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th><%= l(:label_104_employee_number) %></th>
+        <th><%= l(:label_104_employee_name) %></th>
+        <th><%= l(:label_104_start_date) %></th>
+        <th><%= l(:label_104_start_time) %></th>
+        <th><%= l(:label_104_end_date) %></th>
+        <th><%= l(:label_104_end_time) %></th>
+        <th><%= l(:label_104_deduct_break) %></th>
+        <th><%= l(:label_104_total_hours) %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @grouped_entries.each_with_index do |entry, index| %>
+        <tr class="<%= cycle('odd', 'even') %>">
+          <td><%= index + 1 %></td>
+          <td><%= employee_number_for(entry[:user]) %></td>
+          <td><%= entry[:user].name %></td>
+          <td><%= entry[:date].strftime('%Y/%m/%d') %></td>
+          <td><%= default_start_time %></td>
+          <td><%= entry[:date].strftime('%Y/%m/%d') %></td>
+          <td><%= calculate_end_time(default_start_time, entry[:adjusted_hours]) %></td>
+          <td><%= entry[:deduct_break] ? '是' : '否' %></td>
+          <td><%= format_hours(entry[:total_hours]) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p class="nodata"><%= l(:label_no_time_entries_found) %></p>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render partial: 'timelog/sidebar' %>
+<% end %>
+
+<% html_title l(:label_104_worktime_report) %>

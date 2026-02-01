@@ -1,0 +1,16 @@
+<%= render partial: 'queries/query_form' %>
+
+<div class="tabs hide-when-print">
+<% query_params = request.query_parameters %>
+<ul>
+    <li><%= link_to(l(:label_details), _time_entries_path(@project, nil, params: query_params),
+                                       class: (controller_name == 'timelog' && action_name == 'index' ? 'selected' : nil)) %></li>
+    <li><%= link_to(l(:label_report), _report_time_entries_path(@project, nil, params: query_params),
+                                       class: (action_name == 'report' ? 'selected' : nil)) %></li>
+    <% if User.current.allowed_to_globally?(:export_104_worktime) || (@project && User.current.allowed_to?(:export_104_worktime, @project)) %>
+    <li><%= link_to(l(:label_104_worktime_report),
+                    @project ? project_one_zero_four_worktime_path(@project, params: query_params) : one_zero_four_worktime_path(params: query_params),
+                    class: (controller_name == 'one_zero_four_worktime' ? 'selected' : nil)) %></li>
+    <% end %>
+</ul>
+</div>

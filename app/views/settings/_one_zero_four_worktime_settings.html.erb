@@ -1,0 +1,21 @@
+<p>
+  <label><%= l(:label_employee_number_cf) %></label>
+  <%= select_tag 'settings[employee_number_cf_id]',
+        options_from_collection_for_select(
+          UserCustomField.all.sorted,
+          :id,
+          :name,
+          @settings['employee_number_cf_id'].to_s
+        ),
+        include_blank: true %>
+  <em class="info"><%= l(:text_select_employee_number_cf) %></em>
+</p>
+
+<p>
+  <label><%= l(:label_default_start_time) %></label>
+  <%= text_field_tag 'settings[default_start_time]',
+        @settings['default_start_time'].presence || '09:30',
+        size: 5,
+        placeholder: '09:30' %>
+  <em class="info">HH:MM</em>
+</p>
