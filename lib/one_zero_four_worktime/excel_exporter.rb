@@ -99,6 +99,10 @@ module OneZeroFourWorktime
       employee_number = get_employee_number(user)
       start_time = @default_start_time
       end_time = calculate_end_time(start_time, adjusted_hours)
+
+      # Add 30 mins for dinner break if end time is over 17:30
+      end_time = add_dinner_break(end_time)
+
       date_str = date.strftime('%Y/%m/%d')
 
       [
@@ -131,6 +135,24 @@ module OneZeroFourWorktime
       end_minute = total_minutes % 60
 
       format('%02d:%02d', end_hour, end_minute)
+    end
+
+    # Add 30 minutes for dinner break if end time is over 17:30
+    def add_dinner_break(end_time_str)
+      return end_time_str if end_time_str.blank?
+
+      parts = end_time_str.split(':')
+      hour = parts[0].to_i
+      minute = parts[1].to_i
+
+      # Check if over 17:30
+      if hour > 17 || (hour == 17 && minute > 30)
+        total_minutes = hour * 60 + minute + 30
+        hour = (total_minutes / 60) % 24
+        minute = total_minutes % 60
+      end
+
+      format('%02d:%02d', hour, minute)
     end
   end
 end
