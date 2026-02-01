@@ -36,8 +36,8 @@ class ExcelExporterTest < ActiveSupport::TestCase
     assert_equal 1, package.workbook.worksheets.count
     assert_equal '104工時報表', package.workbook.worksheets.first.name
 
-    # Verify row count: 4 header rows + 2 data rows
-    assert_equal 6, package.workbook.worksheets.first.rows.count
+    # Verify row count: 1 title + 1 header + 1 rule + 1 format + 2 examples + 2 data = 8
+    assert_equal 8, package.workbook.worksheets.first.rows.count
   end
 
   def test_calculate_end_time

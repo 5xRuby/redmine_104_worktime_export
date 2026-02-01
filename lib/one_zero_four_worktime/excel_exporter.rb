@@ -35,15 +35,26 @@ module OneZeroFourWorktime
       '選單'
     ].freeze
 
-    EXAMPLE_ROW = [
+    EXAMPLE_ROW_1 = [
       '範例',
       '9104',
       '伊琳士',
       '2013/09/01',
-      '09:30',
+      '9:00',
       '2013/09/01',
-      '18:30',
+      '18:00',
       '是'
+    ].freeze
+
+    EXAMPLE_ROW_2 = [
+      '範例',
+      '9104',
+      '伊琳士',
+      '2013/09/02',
+      '14:00',
+      '2013/09/03',
+      '18:00',
+      '否'
     ].freeze
 
     def initialize(grouped_entries, settings = {})
@@ -58,11 +69,15 @@ module OneZeroFourWorktime
       workbook = package.workbook
 
       workbook.add_worksheet(name: '104工時報表') do |sheet|
+        # Title row
+        sheet.add_row ['時數資料']
+
         # Header rows
         sheet.add_row HEADERS
         sheet.add_row RULE_ROW
         sheet.add_row FORMAT_ROW
-        sheet.add_row EXAMPLE_ROW
+        sheet.add_row EXAMPLE_ROW_1
+        sheet.add_row EXAMPLE_ROW_2
 
         # Data rows
         @grouped_entries.each_with_index do |entry, index|
@@ -89,7 +104,7 @@ module OneZeroFourWorktime
       [
         sequence,
         employee_number,
-        user.name,
+        "#{user.lastname}#{user.firstname}",
         date_str,
         start_time,
         date_str,

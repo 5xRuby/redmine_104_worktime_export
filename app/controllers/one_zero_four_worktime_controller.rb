@@ -77,7 +77,7 @@ class OneZeroFourWorktimeController < ApplicationController
   end
 
   def grouped_time_entries
-    scope = time_entry_scope.preload(:user)
+    scope = time_entry_scope.preload(user: :custom_values)
     entries = scope.to_a
 
     # Group by (date, user)
